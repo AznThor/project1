@@ -1,0 +1,294 @@
+pip install yfinance --upgrade --no-cache-dir
+​
+Requirement already up-to-date: yfinance in c:\users\darren\anaconda3\lib\site-packages (0.1.59)
+Requirement already satisfied, skipping upgrade: pandas>=0.24 in c:\users\darren\anaconda3\lib\site-packages (from yfinance) (1.1.3)
+Requirement already satisfied, skipping upgrade: lxml>=4.5.1 in c:\users\darren\anaconda3\lib\site-packages (from yfinance) (4.6.1)
+Requirement already satisfied, skipping upgrade: multitasking>=0.0.7 in c:\users\darren\anaconda3\lib\site-packages (from yfinance) (0.0.9)
+Requirement already satisfied, skipping upgrade: numpy>=1.15 in c:\users\darren\anaconda3\lib\site-packages (from yfinance) (1.19.2)
+Requirement already satisfied, skipping upgrade: requests>=2.20 in c:\users\darren\anaconda3\lib\site-packages (from yfinance) (2.24.0)
+Requirement already satisfied, skipping upgrade: pytz>=2017.2 in c:\users\darren\anaconda3\lib\site-packages (from pandas>=0.24->yfinance) (2020.1)
+Requirement already satisfied, skipping upgrade: python-dateutil>=2.7.3 in c:\users\darren\anaconda3\lib\site-packages (from pandas>=0.24->yfinance) (2.8.1)
+Requirement already satisfied, skipping upgrade: certifi>=2017.4.17 in c:\users\darren\anaconda3\lib\site-packages (from requests>=2.20->yfinance) (2020.6.20)
+Requirement already satisfied, skipping upgrade: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in c:\users\darren\anaconda3\lib\site-packages (from requests>=2.20->yfinance) (1.25.11)
+Requirement already satisfied, skipping upgrade: chardet<4,>=3.0.2 in c:\users\darren\anaconda3\lib\site-packages (from requests>=2.20->yfinance) (3.0.4)
+Requirement already satisfied, skipping upgrade: idna<3,>=2.5 in c:\users\darren\anaconda3\lib\site-packages (from requests>=2.20->yfinance) (2.10)
+Requirement already satisfied, skipping upgrade: six>=1.5 in c:\users\darren\anaconda3\lib\site-packages (from python-dateutil>=2.7.3->pandas>=0.24->yfinance) (1.15.0)
+Note: you may need to restart the kernel to use updated packages.
+import yfinance as yf
+import matplotlib.pyplot as plt
+import pandas as pd 
+import numpy as np
+def ticker_pull(ticker, start, end, interval):
+    # import libaries
+    import yfinance as yf  
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    # download data using yfinance libary
+    df = yf.download(tickers=ticker,start=start,end=end,interval=interval)
+    # add in column showing price % change from start date 
+    df['Percent_Change_From_Startdate'] = [(df['Close'][i] - df['Open'].iloc[0]) / df['Open'].iloc[0] * 100 for i in range(len(df['Open']))]
+    df['Change_Close_Less_Open'] = [df['Close'][i] - df['Open'][i] for i in range(len(df['Open']))]
+    return df
+df_btc = ticker_pull(ticker='BTC-USD',start='2020-01-01',end='2021-04-30',interval='1d')
+df_btc.head()
+​
+[*********************100%***********************]  1 of 1 completed
+Open	High	Low	Close	Adj Close	Volume	Percent_Change_From_Startdate	Change_Close_Less_Open
+Date								
+2020-01-01	7194.892090	7254.330566	7174.944336	7200.174316	7200.174316	18565664997	0.073416	5.282227
+2020-01-02	7202.551270	7212.155273	6935.270020	6985.470215	6985.470215	20802083465	-2.910702	-217.081055
+2020-01-03	6984.428711	7413.715332	6914.996094	7344.884277	7344.884277	28111481032	2.084704	360.455566
+2020-01-04	7345.375488	7427.385742	7309.514160	7410.656738	7410.656738	18444271275	2.998859	65.281250
+2020-01-05	7410.451660	7544.497070	7400.535645	7411.317383	7411.317383	19725074095	3.008041	0.865723
+df_gme = ticker_pull(ticker='gme',start='2020-01-01',end='2021-04-30',interval='1d')
+df_gme.head()
+[*********************100%***********************]  1 of 1 completed
+Open	High	Low	Close	Adj Close	Volume	Percent_Change_From_Startdate	Change_Close_Less_Open
+Date								
+2020-01-02	6.14	6.47	6.07	6.31	6.31	4453600	2.768731	0.17
+2020-01-03	6.21	6.25	5.84	5.88	5.88	3543900	-4.234524	-0.33
+2020-01-06	5.80	5.91	5.60	5.85	5.85	3394800	-4.723127	0.05
+2020-01-07	5.77	5.83	5.44	5.52	5.52	5228000	-10.097718	-0.25
+2020-01-08	5.49	5.85	5.41	5.72	5.72	5629400	-6.840392	0.23
+df_doge = ticker_pull(ticker='DOGE-USD',start='2020-01-01',end='2021-04-30',interval='1d')
+df_doge.head()
+[*********************100%***********************]  1 of 1 completed
+Open	High	Low	Close	Adj Close	Volume	Percent_Change_From_Startdate	Change_Close_Less_Open
+Date								
+2020-01-01	0.002028	0.002052	0.002021	0.002033	0.002033	51180941	0.246550	0.000005
+2020-01-02	0.002034	0.002110	0.001983	0.002009	0.002009	65071106	-0.936891	-0.000025
+2020-01-03	0.002008	0.002177	0.001991	0.002145	0.002145	62619988	5.769229	0.000137
+2020-01-04	0.002144	0.002490	0.002050	0.002241	0.002241	94227582	10.502958	0.000097
+2020-01-05	0.002240	0.002491	0.002117	0.002419	0.002419	52631740	19.280076	0.000179
+df_doge.to_csv(r'C:\Users\Darren\Desktop\usc-virt-data-pt-03-2021-u-c\06-Python-APIs\Homework\ DogeCoin.csv', index = False)
+df_doge.to_csv(r'C:\Users\Darren\Desktop\usc-virt-data-pt-03-2021-u-c\06-Python-APIs\Homework\ DogeCoin.csv', index = False)
+df_gme.to_csv(r'C:\Users\Darren\Desktop\usc-virt-data-pt-03-2021-u-c\06-Python-APIs\Homework\ GameStop.csv', index = False)
+df_gme.to_csv(r'C:\Users\Darren\Desktop\usc-virt-data-pt-03-2021-u-c\06-Python-APIs\Homework\ GameStop.csv', index = False)
+Bitcoin
+df_btc.to_csv(r'C:\Users\Darren\Desktop\usc-virt-data-pt-03-2021-u-c\06-Python-APIs\Homework\ Bitcoin.csv', index = False)
+# stock info
+gme = yf.Ticker("GME")
+​
+gme.info
+{'zip': '76051',
+ 'sector': 'Consumer Cyclical',
+ 'fullTimeEmployees': 12000,
+ 'longBusinessSummary': 'GameStop Corp., a specialty retailer, provides games and entertainment products through its e-commerce properties and various stores in the United States, Canada, Australia, and Europe. The company sells new and pre-owned video game platforms; accessories, such as controllers, gaming headsets, virtual reality products, and memory cards; new and pre-owned video game software; and in-game digital currency, digital downloadable content, and full-game downloads, as well as network points cards, and prepaid digital and subscription cards. It also sells collectibles comprising licensed merchandise primarily related to the video game, television, and movie industries, as well as pop culture themes. The company operates its stores and e-commerce sites under the GameStop, EB Games, and Micromania brands; and collectibles stores under the Zing Pop Culture and ThinkGeek brand, as well as offers Game Informer, a print and digital video game publication featuring reviews of new title releases, game tips, and news regarding the video game industry. As of January 30, 2021, it operated 4,816 stores. The company was formerly known as GSC Holdings Corp. GameStop Corp. was founded in 1996 and is headquartered in Grapevine, Texas.',
+ 'city': 'Grapevine',
+ 'phone': '817 424 2000',
+ 'state': 'TX',
+ 'country': 'United States',
+ 'companyOfficers': [],
+ 'website': 'http://www.gamestop.com',
+ 'maxAge': 1,
+ 'address1': '625 Westport Parkway',
+ 'industry': 'Specialty Retail',
+ 'previousClose': 161.11,
+ 'regularMarketOpen': 161.31,
+ 'twoHundredDayAverage': 90.25341,
+ 'trailingAnnualDividendYield': 0,
+ 'payoutRatio': 0,
+ 'volume24Hr': None,
+ 'regularMarketDayHigh': 161.585,
+ 'navPrice': None,
+ 'averageDailyVolume10Day': 3386140,
+ 'totalAssets': None,
+ 'regularMarketPreviousClose': 161.11,
+ 'fiftyDayAverage': 168.22029,
+ 'trailingAnnualDividendRate': 0,
+ 'open': 161.31,
+ 'toCurrency': None,
+ 'averageVolume10days': 3386140,
+ 'expireDate': None,
+ 'yield': None,
+ 'algorithm': None,
+ 'dividendRate': None,
+ 'exDividendDate': 1552521600,
+ 'beta': -1.936363,
+ 'circulatingSupply': None,
+ 'startDate': None,
+ 'regularMarketDayLow': 143,
+ 'priceHint': 2,
+ 'currency': 'USD',
+ 'regularMarketVolume': 4747843,
+ 'lastMarket': None,
+ 'maxSupply': None,
+ 'openInterest': None,
+ 'marketCap': 10135937024,
+ 'volumeAllCurrencies': None,
+ 'strikePrice': None,
+ 'averageVolume': 21715436,
+ 'priceToSalesTrailing12Months': 1.9914213,
+ 'dayLow': 143,
+ 'ask': 144.2,
+ 'ytdReturn': None,
+ 'askSize': 1200,
+ 'volume': 4747843,
+ 'fiftyTwoWeekHigh': 483,
+ 'forwardPE': -270.22644,
+ 'fromCurrency': None,
+ 'fiveYearAvgDividendYield': None,
+ 'fiftyTwoWeekLow': 3.77,
+ 'bid': 144.13,
+ 'tradeable': False,
+ 'dividendYield': None,
+ 'bidSize': 3000,
+ 'dayHigh': 161.585,
+ 'exchange': 'NYQ',
+ 'shortName': 'GameStop Corporation',
+ 'longName': 'GameStop Corp.',
+ 'exchangeTimezoneName': 'America/New_York',
+ 'exchangeTimezoneShortName': 'EDT',
+ 'isEsgPopulated': False,
+ 'gmtOffSetMilliseconds': '-14400000',
+ 'quoteType': 'EQUITY',
+ 'symbol': 'GME',
+ 'messageBoardId': 'finmb_1342560',
+ 'market': 'us_market',
+ 'annualHoldingsTurnover': None,
+ 'enterpriseToRevenue': 2.074,
+ 'beta3Year': None,
+ 'profitMargins': -0.0423,
+ 'enterpriseToEbitda': -62.601,
+ '52WeekChange': 34.486786,
+ 'morningStarRiskRating': None,
+ 'forwardEps': -0.53,
+ 'revenueQuarterlyGrowth': None,
+ 'sharesOutstanding': 70771800,
+ 'fundInceptionDate': None,
+ 'annualReportExpenseRatio': None,
+ 'bookValue': 6.688,
+ 'sharesShort': 11112124,
+ 'sharesPercentSharesOut': 0.157,
+ 'fundFamily': None,
+ 'lastFiscalYearEnd': 1611964800,
+ 'heldPercentInstitutions': 1.08287,
+ 'netIncomeToCommon': -214600000,
+ 'trailingEps': -3.312,
+ 'lastDividendValue': 0.38,
+ 'SandP52WeekChange': 0.4747119,
+ 'priceToBook': 21.414473,
+ 'heldPercentInsiders': 0.19421,
+ 'nextFiscalYearEnd': 1675036800,
+ 'mostRecentQuarter': 1611964800,
+ 'shortRatio': 0.65,
+ 'sharesShortPreviousMonthDate': 1615766400,
+ 'floatShares': 47750085,
+ 'enterpriseValue': 10554509312,
+ 'threeYearAverageReturn': None,
+ 'lastSplitDate': 1174262400,
+ 'lastSplitFactor': '2:1',
+ 'legalType': None,
+ 'lastDividendDate': 1552521600,
+ 'morningStarOverallRating': None,
+ 'earningsQuarterlyGrowth': 2.833,
+ 'dateShortInterest': 1618444800,
+ 'pegRatio': 4.6,
+ 'lastCapGain': None,
+ 'shortPercentOfFloat': 0.2723,
+ 'sharesShortPriorMonth': 10187324,
+ 'impliedSharesOutstanding': None,
+ 'category': None,
+ 'fiveYearAverageReturn': None,
+ 'regularMarketPrice': 143.22,
+ 'logo_url': 'https://logo.clearbit.com/gamestop.com'}
+hist = gme.history(period="max")
+me.actions
+gme.actions
+Dividends	Stock Splits
+Date		
+2007-03-19	0.000	2.0
+2012-02-16	0.150	0.0
+2012-05-24	0.150	0.0
+2012-08-24	0.250	0.0
+2012-11-26	0.250	0.0
+2013-03-01	0.275	0.0
+2013-05-31	0.275	0.0
+2013-08-29	0.275	0.0
+2013-12-02	0.275	0.0
+2014-03-13	0.330	0.0
+2014-06-02	0.330	0.0
+2014-08-29	0.330	0.0
+2014-11-21	0.330	0.0
+2015-03-13	0.360	0.0
+2015-06-08	0.360	0.0
+2015-09-04	0.360	0.0
+2015-12-01	0.360	0.0
+2016-03-04	0.370	0.0
+2016-06-06	0.370	0.0
+2016-09-07	0.370	0.0
+2016-11-29	0.370	0.0
+2017-03-10	0.380	0.0
+2017-06-05	0.380	0.0
+2017-09-07	0.380	0.0
+2017-11-30	0.380	0.0
+2018-03-02	0.380	0.0
+2018-06-11	0.380	0.0
+2018-09-17	0.380	0.0
+2018-12-10	0.380	0.0
+2019-03-14	0.380	0.0
+gme.dividends
+gme.dividends
+Date
+2012-02-16    0.150
+2012-05-24    0.150
+2012-08-24    0.250
+2012-11-26    0.250
+2013-03-01    0.275
+2013-05-31    0.275
+2013-08-29    0.275
+2013-12-02    0.275
+2014-03-13    0.330
+2014-06-02    0.330
+2014-08-29    0.330
+2014-11-21    0.330
+2015-03-13    0.360
+2015-06-08    0.360
+2015-09-04    0.360
+2015-12-01    0.360
+2016-03-04    0.370
+2016-06-06    0.370
+2016-09-07    0.370
+2016-11-29    0.370
+2017-03-10    0.380
+2017-06-05    0.380
+2017-09-07    0.380
+2017-11-30    0.380
+2018-03-02    0.380
+2018-06-11    0.380
+2018-09-17    0.380
+2018-12-10    0.380
+2019-03-14    0.380
+Name: Dividends, dtype: float64
+gme.splits
+gme.splits
+Date
+2007-03-19    2.0
+Name: Stock Splits, dtype: float64
+gme.financials
+#show financials 
+​
+gme.financials
+2021-01-30	2020-02-01	2019-02-02	2018-02-03
+Research Development	None	None	None	None
+Effect Of Accounting Charges	None	None	None	None
+Income Before Tax	-2.699e+08	-4.268e+08	-7.531e+08	3.839e+08
+Minority Interest	None	None	None	None
+Net Income	-2.153e+08	-4.709e+08	-6.73e+08	3.47e+07
+Selling General Administrative	1.5088e+09	1.8474e+09	1.9876e+09	2.0407e+09
+Gross Profit	1.2595e+09	1.9087e+09	2.3081e+09	2.4849e+09
+Ebit	-2.493e+08	6.13e+07	3.205e+08	4.442e+08
+Operating Income	-2.493e+08	6.13e+07	3.205e+08	4.442e+08
+Other Operating Expenses	None	None	None	None
+Interest Expense	-3.4e+07	-3.85e+07	-5.68e+07	-5.68e+07
+Extraordinary Items	None	None	None	None
+Non Recurring	None	None	None	None
+Other Items	None	None	None	None
+Income Tax Expense	-5.53e+07	3.76e+07	4.17e+07	1.535e+08
+Total Revenue	5.0898e+09	6.466e+09	8.2853e+09	8.5471e+09
+Total Operating Expenses	5.3391e+09	6.4047e+09	7.9648e+09	8.1029e+09
+Cost Of Revenue	3.8303e+09	4.5573e+09	5.9772e+09	6.0622e+09
+Total Other Income Expense Net	-2.06e+07	-4.881e+08	-1.0736e+09	-6.03e+07
+Discontinued Operations	-700000	-6.5e+06	1.218e+08	-1.957e+08
+Net Income From Continuing Ops	-2.146e+08	-4.644e+08	-7.948e+08	2.304e+08
+Net Income Applicable To Common Shares	-2.153e+08	-4.709e+08	-6.73e+08	3.47e+07
